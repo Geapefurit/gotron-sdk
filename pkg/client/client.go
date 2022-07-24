@@ -50,7 +50,15 @@ func (g *GrpcClient) Start(opts ...grpc.DialOption) error {
 		g.Address = "grpc.trongrid.io:50051"
 	}
 	g.opts = opts
-	g.Conn, err = grpc.Dial(g.Address, opts...)
+	_ctx, cancel := context.WithTimeout(context.Background(), g.grpcTimeout)
+	defer cancel()
+	g.Conn, err = grpc.DialContext(_ctx, g.Address, opts...)
+
+	exit := make(chan struct{})
+	go func() {
+		g.Conn, err = grpc.Dial(g.Address, opts...)
+		exit <- struct{}{}
+	}()
 
 	if err != nil {
 		return fmt.Errorf("Connecting GRPC Client: %v", err)
