@@ -53,6 +53,7 @@ func (g *GrpcClient) Start(opts ...grpc.DialOption) error {
 	_ctx, cancel := context.WithTimeout(context.Background(), g.grpcTimeout)
 	defer cancel()
 	g.Conn, err = grpc.DialContext(_ctx, g.Address, opts...)
+	// original
 	// g.Conn, err = grpc.Dial(g.Address, opts...)
 
 	if err != nil {
