@@ -53,12 +53,7 @@ func (g *GrpcClient) Start(opts ...grpc.DialOption) error {
 	_ctx, cancel := context.WithTimeout(context.Background(), g.grpcTimeout)
 	defer cancel()
 	g.Conn, err = grpc.DialContext(_ctx, g.Address, opts...)
-
-	exit := make(chan struct{})
-	go func() {
-		g.Conn, err = grpc.Dial(g.Address, opts...)
-		exit <- struct{}{}
-	}()
+	// g.Conn, err = grpc.Dial(g.Address, opts...)
 
 	if err != nil {
 		return fmt.Errorf("Connecting GRPC Client: %v", err)
